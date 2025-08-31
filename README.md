@@ -1,4 +1,4 @@
-# LabSIS SaaS KIT V4
+LabSIS SaaS KIT V4
 
 <div align="center">
   <img src="public/images/LabSIS.png" alt="LabSIS Logo" width="700" />

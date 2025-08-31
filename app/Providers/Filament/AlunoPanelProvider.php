@@ -2,14 +2,16 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\RedirectGuestsToCentralLoginMiddleware;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
-use Filament\Enums\ThemeMode;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\Widgets\AccountWidget;
+use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -17,26 +19,28 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AuthPanelProvider extends PanelProvider
+class AlunoPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('auth')
-            //->path('')
-            ->darkMode(false)
-            ->defaultThemeMode(ThemeMode::Light)
-            ->viteTheme('resources/css/filament/admin/theme.css')
-            ->authGuard('web')
-            //->login(\App\Filament\Pages\Auth\Login::class)
-            ->registration()
-            ->passwordReset()
-            ->emailVerification()
-            ->emailChangeVerification()
-            ->multiFactorAuthentication(
-                AppAuthentication::make()
-                    ->recoverable()
-            )
+            ->id('aluno')
+            ->path('aluno')
+            ->login()
+            ->authGuard('aluno')
+            ->colors([
+                'primary' => Color::Amber,
+            ])
+            ->discoverResources(in: app_path('Filament/Aluno/Resources'), for: 'App\Filament\Aluno\Resources')
+            ->discoverPages(in: app_path('Filament/Aluno/Pages'), for: 'App\Filament\Aluno\Pages')
+            ->pages([
+                Dashboard::class,
+            ])
+            ->discoverWidgets(in: app_path('Filament/Aluno/Widgets'), for: 'App\Filament\Aluno\Widgets')
+            ->widgets([
+                AccountWidget::class,
+                FilamentInfoWidget::class,
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -47,6 +51,9 @@ class AuthPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->authMiddleware([
+                Authenticate::class,
             ]);
     }
 }

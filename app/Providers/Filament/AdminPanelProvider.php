@@ -20,6 +20,7 @@ class AdminPanelProvider extends BasePanelProvider
         // Particularidades do painel admin
         $panel = $panel
             ->default()
+            ->login()
             ->bootUsing(function (): void {
                 FilamentComponentsConfigurator::configure();
             })

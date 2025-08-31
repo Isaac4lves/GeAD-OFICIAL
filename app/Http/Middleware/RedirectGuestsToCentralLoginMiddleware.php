@@ -11,9 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectGuestsToCentralLoginMiddleware
 {
-    /**
-     * @param  Closure(Request): (Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
         if (Filament::auth()->check()) {
@@ -22,18 +19,25 @@ class RedirectGuestsToCentralLoginMiddleware
 
         $path = $request->path();
 
-        // Permitir acessar páginas públicas e as próprias rotas do painel de autenticação
-        $isPublicAuthRoute = $path === 'login'
-            || $path === 'register'
-            || str_starts_with($path, 'password-reset')
-            || str_starts_with($path, 'email/verify')
-            || str_starts_with($path, 'email/change');
-
-        if ($isPublicAuthRoute) {
-            return $next($request);
+        // Se a URL começar com /admin, redireciona para o login do admin
+        if (str_starts_with($path, 'admin')) {
+            // A menos que já seja a própria página de login
+            if ($path === 'admin/login') {
+                return $next($request);
+            }
+            return redirect()->to('/admin/login');
         }
 
-        // Se o usuário convidado tentou acessar qualquer outro painel, redireciona para /login
-        return redirect()->to('/login');
+        // Se a URL começar com /aluno, redireciona para o login do aluno
+        if (str_starts_with($path, 'aluno')) {
+            // A menos que já seja a própria página de login
+            if ($path === 'aluno/login') {
+                return $next($request);
+            }
+            return redirect()->to('/aluno/login');
+        }
+
+        // Para qualquer outra rota não autenticada, deixa passar (pode ser a home, etc)
+        return $next($request);
     }
 }
