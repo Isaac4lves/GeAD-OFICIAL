@@ -1,0 +1,30 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+
+/* npm run build  */
+
+body {
+    background-color: #008b56;
+}
+
+.fi-simple-header-heading {
+    margin-top: 2rem;
+}
+
+.fi-simple-main.fi-width-lg {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+}
+
+input.fi-input {
+    height: 2.5rem;
+}
+
+
+.fi-logo {
+    margin: 0 auto 1rem auto; 
+    padding-bottom: 1rem;
+}
